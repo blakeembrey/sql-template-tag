@@ -1,6 +1,6 @@
 {
   "name": "sql-template-tag",
-  "version": "2.5.2",
+  "version": "3.0.0",
   "description": "",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
