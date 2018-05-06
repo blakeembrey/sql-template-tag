@@ -37,16 +37,13 @@ sqltag`SELECT * FROM books ${hasIds ? sql`WHERE ids IN (${join(ids)})` : empty}`
 
 ## Related
 
-* [`sql-template-strings`](https://github.com/felixfbecker/node-sql-template-strings)
-* [`pg-template-tag`](https://github.com/XeCycle/pg-template-tag)
-
 The main difference between this module and others is first-class TypeScript. There's also the `raw`, `join` and `empty` helpers. Specific differences are documented below:
 
-**`sql-template-strings`**
+**[`sql-template-strings`](https://github.com/felixfbecker/node-sql-template-strings)**
 
 Promotes mutation via chained methods and lacks nesting SQL statements. The idea to support both `sql` and `test` for `mysql` and `pg` compatibility came from here.
 
-**`pg-template-tag`**
+**[`pg-template-tag`](https://github.com/XeCycle/pg-template-tag)**
 
 Missing TypeScript and MySQL support. This is the API I envisioned before starting development and, by supporting `pg` only, it has the ability to [dedupe `values`](https://github.com/XeCycle/pg-template-tag/issues/5#issuecomment-386875336). Supporting MySQL makes deduping impossible, because of `?` placeholders instead of `$<num>`, so I decided that was a premature optimisation here and opted to keep `mysql` support here instead.
 
