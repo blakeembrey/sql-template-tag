@@ -1,4 +1,4 @@
-export type Value = string | number | boolean | object
+export type Value = string | number | boolean | object | null | undefined
 export type RawValue = Value | Sql
 
 export class Sql {
