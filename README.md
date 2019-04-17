@@ -41,7 +41,7 @@ The main difference between this module and others is first-class TypeScript. Th
 
 **[`sql-template-strings`](https://github.com/felixfbecker/node-sql-template-strings)**
 
-Promotes mutation via chained methods and lacks nesting SQL statements. The idea to support both `sql` and `test` for `mysql` and `pg` compatibility came from here.
+Promotes mutation via chained methods and lacks nesting SQL statements. The idea to support both `sql` and `text` for `mysql` and `pg` compatibility came from here.
 
 **[`pg-template-tag`](https://github.com/XeCycle/pg-template-tag)**
 
