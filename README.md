@@ -16,23 +16,23 @@ npm install sql-template-tag --save
 ## Usage
 
 ```ts
-import { sqltag, empty, join, raw } from 'sql-template-tag'
+import sql, { empty, join, raw } from "sql-template-tag";
 
-const query = sql`SELECT * FROM books WHERE id = ${id}`
+const query = sql`SELECT * FROM books WHERE id = ${id}`;
 
-query.sql //=> "SELECT * FROM books WHERE id = ?"
-query.text //=> "SELECT * FROM books WHERE id = $1"
-query.values //=> [id]
+query.sql; //=> "SELECT * FROM books WHERE id = ?"
+query.text; //=> "SELECT * FROM books WHERE id = $1"
+query.values; //=> [id]
 
-pg.query(query) // Uses `text` and `values`.
-mysql.query(query) // Uses `sql` and `values`.
+pg.query(query); // Uses `text` and `values`.
+mysql.query(query); // Uses `sql` and `values`.
 
 // Embed SQL instances inside SQL instances.
-const subquery = sqltag`SELECT id FROM authors WHERE name = ${'Blake'}`
-const query = sqltag`SELECT * FROM books WHERE author_id IN (${subquery})`
+const nested = sql`SELECT id FROM authors WHERE name = ${"Blake"}`;
+const query = sql`SELECT * FROM books WHERE author_id IN (${nested})`;
 
 // Join and "empty" helpers (useful for nested queries).
-sqltag`SELECT * FROM books ${hasIds ? sql`WHERE ids IN (${join(ids)})` : empty}`
+sql`SELECT * FROM books ${hasIds ? sql`WHERE ids IN (${join(ids)})` : empty}`;
 ```
 
 ## Related

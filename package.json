@@ -8,11 +8,13 @@
     "dist/"
   ],
   "scripts": {
+    "prettier": "prettier --write",
     "lint": "tslint \"src/**/*.ts\" --project tsconfig.json",
-    "build": "rimraf dist/ && tsc",
+    "format": "npm run prettier -- README.md \"*.json\" \"src/**/*.ts\"",
+    "build": "rimraf dist && tsc",
     "specs": "jest --coverage",
-    "test": "npm run build && npm run lint && npm run specs",
-    "prepublish": "npm run build"
+    "test": "npm run -s lint && npm run -s build && npm run -s specs",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -56,13 +58,31 @@
       "node"
     ]
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,json,css,md}": [
+      "npm run prettier",
+      "git add"
+    ]
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "@types/jest": "^24.0.11",
-    "@types/node": "^11.13.4",
+    "@types/node": "^12.0.0",
+    "husky": "^2.2.0",
     "jest": "^24.7.1",
+    "lint-staged": "^8.1.6",
+    "prettier": "^1.17.0",
     "rimraf": "^2.6.2",
     "ts-jest": "^24.0.2",
     "tslint": "^5.10.0",
+    "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^8.0.1",
     "typescript": "^3.4.3"
   }
