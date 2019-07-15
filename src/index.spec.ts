@@ -1,4 +1,4 @@
-import { inspect } from 'util';
+import { inspect } from "util";
 import sql, { empty, join, Sql } from "./index";
 
 describe("sql template tag", () => {
@@ -63,8 +63,6 @@ describe("sql template tag", () => {
   });
 
   it("should inspect sql instance", () => {
-    expect(inspect(sql`SELECT * FROM test`)).toEqual(`{ text: 'SELECT * FROM test',
-  sql: 'SELECT * FROM test',
-  values: [] }`)
-  })
+    expect(inspect(sql`SELECT * FROM test`)).toContain(`'SELECT * FROM test'`);
+  });
 });
