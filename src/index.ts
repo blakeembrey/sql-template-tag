@@ -1,6 +1,12 @@
+import { inspect } from "util";
+import { cache } from "decorator-cache-getter";
+
 export type Value = string | number | boolean | object | null | undefined;
 export type RawValue = Value | Sql;
 
+/**
+ * A SQL instance can be nested within each other to build SQL strings.
+ */
 export class Sql {
   constructor(
     protected rawStrings: ReadonlyArray<string>,
@@ -18,6 +24,7 @@ export class Sql {
     }
   }
 
+  @cache
   get values(): Value[] {
     const values: Value[] = [];
 
@@ -32,6 +39,7 @@ export class Sql {
     return values;
   }
 
+  @cache
   get strings(): string[] {
     const strings: string[] = [this.rawStrings[0]];
 
@@ -51,19 +59,29 @@ export class Sql {
     return strings;
   }
 
+  @cache
   get text() {
     return this.strings.reduce(
       (text, part, index) => `${text}$${index}${part}`
     );
   }
 
+  @cache
   get sql() {
     return this.strings.join("?");
+  }
+
+  [inspect.custom]() {
+    return {
+      text: this.text,
+      sql: this.sql,
+      values: this.values
+    };
   }
 }
 
 /**
- * Create a SQL object for a list of values.
+ * Create a SQL query for a list of values.
  */
 export function join(values: RawValue[], separator = ",") {
   const parts = [""];
@@ -91,4 +109,7 @@ export function sqltag(strings: TemplateStringsArray, ...values: RawValue[]) {
   return new Sql(strings.raw, values);
 }
 
+/**
+ * Standard `sql` tag.
+ */
 export default sqltag;
