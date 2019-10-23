@@ -66,6 +66,15 @@ describe("sql template tag", () => {
     expect(inspect(sql`SELECT * FROM test`)).toContain(`'SELECT * FROM test'`);
   });
 
+  it("keys should be enumerable", () => {
+    const query = sql`SELECT COUNT(1)`;
+    const keys = [];
+
+    for (const key in query) keys.push(key);
+
+    expect(keys).toEqual(["rawStrings", "rawValues", "values", "text", "sql"]);
+  });
+
   describe("join", () => {
     it("should join list", () => {
       const query = join([1, 2, 3]);

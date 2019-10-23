@@ -80,6 +80,11 @@ export class Sql {
   }
 }
 
+// Work around MySQL enumerable keys in issue #2.
+Object.defineProperty(Sql.prototype, 'text', { enumerable: true })
+Object.defineProperty(Sql.prototype, 'values', { enumerable: true })
+Object.defineProperty(Sql.prototype, 'sql', { enumerable: true })
+
 /**
  * Create a SQL query for a list of values.
  */
