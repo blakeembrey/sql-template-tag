@@ -65,4 +65,17 @@ describe("sql template tag", () => {
   it("should inspect sql instance", () => {
     expect(inspect(sql`SELECT * FROM test`)).toContain(`'SELECT * FROM test'`);
   });
+
+  describe("join", () => {
+    it("should join list", () => {
+      const query = join([1, 2, 3]);
+
+      expect(query.text).toEqual("$1,$2,$3");
+      expect(query.values).toEqual([1, 2, 3]);
+    });
+
+    it("should error joining an empty list", () => {
+      expect(() => join([])).toThrowError(TypeError);
+    });
+  });
 });

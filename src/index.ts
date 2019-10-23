@@ -84,10 +84,13 @@ export class Sql {
  * Create a SQL query for a list of values.
  */
 export function join(values: RawValue[], separator = ",") {
-  const parts = [""];
-  for (let i = 0; i < values.length - 1; i++) parts.push(separator);
-  parts.push("");
-  return new Sql(parts, values);
+  if (values.length === 0) {
+    throw new TypeError(
+      "Expected `join([])` to be called with an array of multiple elements, but got an empty array"
+    );
+  }
+
+  return new Sql(["", ...Array(values.length - 1).fill(separator), ""], values);
 }
 
 /**
