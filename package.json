@@ -1,6 +1,6 @@
 {
   "name": "@wzrdtales/sql-template-tag",
-  "version": "3.3.0",
+  "version": "3.4.0",
   "description": "ES2015 tagged template string for preparing SQL statements, works with `pg` and `mysql`",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
