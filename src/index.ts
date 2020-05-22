@@ -74,7 +74,6 @@ export class Sql {
     }
   }
 
-  @cache
   get values(): Value[] {
     return this.rawValues;
   }
