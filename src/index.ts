@@ -64,7 +64,7 @@ export class Sql {
           this.rawStrings[strIn] = strings[len - 1] + rawString;
         } else {
           // concat everything
-          this.rawStrings[strIn - 1] += strings[0] + rawString;
+          this.rawStrings[strIn - 1] += rawString;
           --strIn;
         }
       } else {
