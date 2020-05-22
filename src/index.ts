@@ -1,4 +1,3 @@
-import { cache } from "decorator-cache-getter";
 import { inspect } from "util";
 
 export type Value = string | number | boolean | object | null | undefined;
@@ -82,14 +81,12 @@ export class Sql {
     return this.rawStrings;
   }
 
-  @cache
   get text() {
     return this.strings.reduce(
       (text, part, index) => `${text}$${index}${part}`
     );
   }
 
-  @cache
   get sql() {
     return this.strings.join("?");
   }
