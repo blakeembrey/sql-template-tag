@@ -9,6 +9,8 @@
     "declaration": true,
     "sourceMap": true,
     "inlineSources": true,
+    "esModuleInterop": true,
     "experimentalDecorators": true
-  }
+  },
+  "include": ["src/**/*"]
 }

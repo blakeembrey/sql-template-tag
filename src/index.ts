@@ -1,5 +1,4 @@
 import { inspect } from "util";
-import { cache } from "decorator-cache-getter";
 
 export type Value = string | number | boolean | object | null | undefined;
 export type RawValue = Value | Sql;
@@ -8,9 +7,12 @@ export type RawValue = Value | Sql;
  * A SQL instance can be nested within each other to build SQL strings.
  */
 export class Sql {
+  values: Value[] = [];
+  strings: string[] = [];
+
   constructor(
-    protected rawStrings: ReadonlyArray<string>,
-    protected rawValues: ReadonlyArray<RawValue>
+    rawStrings: ReadonlyArray<string>,
+    rawValues: ReadonlyArray<RawValue>
   ) {
     if (rawStrings.length === 0) {
       throw new TypeError("Expected at least 1 string");
@@ -23,51 +25,33 @@ export class Sql {
         } values`
       );
     }
-  }
 
-  @cache
-  get values(): Value[] {
-    const values: Value[] = [];
+    this.strings.push(rawStrings[0]);
 
-    for (const rawValue of this.rawValues) {
-      if (rawValue instanceof Sql) {
-        values.push(...rawValue.values);
-      } else {
-        values.push(rawValue);
-      }
-    }
-
-    return values;
-  }
-
-  @cache
-  get strings(): string[] {
-    const strings: string[] = [this.rawStrings[0]];
-
-    for (let i = 1; i < this.rawStrings.length; i++) {
-      const child = this.rawValues[i - 1];
+    for (let i = 1; i < rawStrings.length; i++) {
+      const child = rawValues[i - 1];
 
       if (child instanceof Sql) {
         // Concatenate previous and next texts with child SQL statement.
-        strings[strings.length - 1] += child.strings[0];
-        strings.push(...child.strings.slice(1));
-        strings[strings.length - 1] += this.rawStrings[i];
+        this.strings[this.strings.length - 1] += child.strings[0];
+        for (let i = 0; i < child.values.length; i++) {
+          this.values.push(child.values[i]);
+          this.strings.push(child.strings[i + 1]);
+        }
+        this.strings[this.strings.length - 1] += rawStrings[i];
       } else {
-        strings.push(this.rawStrings[i]);
+        this.values.push(child);
+        this.strings.push(rawStrings[i]);
       }
     }
-
-    return strings;
   }
 
-  @cache
   get text() {
     return this.strings.reduce(
       (text, part, index) => `${text}$${index}${part}`
     );
   }
 
-  @cache
   get sql() {
     return this.strings.join("?");
   }
@@ -83,7 +67,6 @@ export class Sql {
 
 // Work around MySQL enumerable keys in issue #2.
 Object.defineProperty(Sql.prototype, "text", { enumerable: true });
-Object.defineProperty(Sql.prototype, "values", { enumerable: true });
 Object.defineProperty(Sql.prototype, "sql", { enumerable: true });
 
 /**
