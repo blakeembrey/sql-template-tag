@@ -14,20 +14,18 @@ export class Sql {
     rawStrings: ReadonlyArray<string>,
     rawValues: ReadonlyArray<RawValue>
   ) {
-    if (rawStrings.length === 0) {
+    let valuesLength = rawValues.length;
+    let stringsLength = rawStrings.length;
+
+    if (stringsLength === 0) {
       throw new TypeError("Expected at least 1 string");
     }
 
-    if (rawStrings.length - 1 !== rawValues.length) {
+    if (stringsLength - 1 !== valuesLength) {
       throw new TypeError(
-        `Expected ${rawStrings.length} strings to have ${
-          rawStrings.length - 1
-        } values`
+        `Expected ${stringsLength} strings to have ${stringsLength - 1} values`
       );
     }
-
-    let valuesLength = rawValues.length;
-    let stringsLength = rawStrings.length;
 
     for (const child of rawValues) {
       if (child instanceof Sql) {

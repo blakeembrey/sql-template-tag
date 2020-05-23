@@ -8,7 +8,8 @@ const start = process.hrtime();
 const queries: Sql[] = [];
 
 for (let i = 0; i < 1_000_000; i++) {
-  const subQuery = `something ${"goes"} here and ${"there"}`;
+  const rawQuery = sql`there`;
+  const subQuery = sql`something ${"goes"} here and ${rawQuery}`;
   const query = sql`this is ${"the"} query: ${i}, ${subQuery}`;
   queries.push(query);
 
