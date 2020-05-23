@@ -1,5 +1,4 @@
 import { inspect } from "util";
-import { cache } from "decorator-cache-getter";
 
 export type Value = string | number | boolean | object | null | undefined;
 export type RawValue = Value | Sql;
@@ -8,9 +7,11 @@ export type RawValue = Value | Sql;
  * A SQL instance can be nested within each other to build SQL strings.
  */
 export class Sql {
+  private rawStrings: Array<string>;
+  private rawValues: Array<RawValue>;
   constructor(
-    protected rawStrings: ReadonlyArray<string>,
-    protected rawValues: ReadonlyArray<RawValue>
+    rawStrings: ReadonlyArray<string>,
+    rawValues: ReadonlyArray<RawValue>
   ) {
     if (rawStrings.length === 0) {
       throw new TypeError("Expected at least 1 string");
@@ -23,51 +24,74 @@ export class Sql {
         } values`
       );
     }
-  }
 
-  @cache
-  get values(): Value[] {
-    const values: Value[] = [];
+    this.rawStrings = [];
+    this.rawValues = [];
 
-    for (const rawValue of this.rawValues) {
-      if (rawValue instanceof Sql) {
-        values.push(...rawValue.values);
-      } else {
-        values.push(rawValue);
-      }
+    if (rawValues.length === 0) {
+      this.rawStrings = rawStrings.slice(0);
+      return;
     }
 
-    return values;
-  }
+    this.rawStrings.length = rawStrings.length;
 
-  @cache
-  get strings(): string[] {
-    const strings: string[] = [this.rawStrings[0]];
+    if (rawValues.length) {
+      this.rawValues.length = rawValues.length;
 
-    for (let i = 1; i < this.rawStrings.length; i++) {
-      const child = this.rawValues[i - 1];
+      for (let child of rawValues) {
+        if (child instanceof Sql) {
+          this.rawStrings.length += child.strings.length;
+          this.rawValues.length += child.values.length - 1;
+        }
+      }
+    }
+    this.rawStrings[0] = rawStrings[0];
 
+    let i = 1;
+    let strIn = 1;
+    for (; i < rawStrings.length; ++i) {
+      const rawString = rawStrings[i];
+      const child = rawValues[i - 1];
+
+      // check for type
       if (child instanceof Sql) {
-        // Concatenate previous and next texts with child SQL statement.
-        strings[strings.length - 1] += child.strings[0];
-        strings.push(...child.strings.slice(1));
-        strings[strings.length - 1] += this.rawStrings[i];
+        const len = child.values.length;
+        // concat beginning
+        this.rawStrings[strIn - 1] += child.strings[0];
+
+        for (let d = 0; d < len; ++d) {
+          this.rawStrings[strIn] = child.strings[d + 1];
+          this.rawValues[strIn - 1] = child.values[d];
+          strIn++;
+        }
+
+        // set current
+        this.rawStrings[strIn - 1] += rawString;
       } else {
-        strings.push(this.rawStrings[i]);
+        this.rawStrings[strIn] = rawString;
+        this.rawValues[strIn - 1] = child;
+        ++strIn;
       }
     }
 
-    return strings;
+    this.rawStrings.length = strIn;
+    this.rawValues.length = strIn - 1;
   }
 
-  @cache
+  get values(): Value[] {
+    return this.rawValues;
+  }
+
+  get strings(): string[] {
+    return this.rawStrings;
+  }
+
   get text() {
     return this.strings.reduce(
       (text, part, index) => `${text}$${index}${part}`
     );
   }
 
-  @cache
   get sql() {
     return this.strings.join("?");
   }
