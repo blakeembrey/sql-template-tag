@@ -18,8 +18,9 @@ export class Sql {
 
     if (rawStrings.length - 1 !== rawValues.length) {
       throw new TypeError(
-        `Expected ${rawStrings.length} strings to have ${rawStrings.length -
-          1} values`
+        `Expected ${rawStrings.length} strings to have ${
+          rawStrings.length - 1
+        } values`
       );
     }
   }
@@ -75,15 +76,15 @@ export class Sql {
     return {
       text: this.text,
       sql: this.sql,
-      values: this.values
+      values: this.values,
     };
   }
 }
 
 // Work around MySQL enumerable keys in issue #2.
-Object.defineProperty(Sql.prototype, 'text', { enumerable: true })
-Object.defineProperty(Sql.prototype, 'values', { enumerable: true })
-Object.defineProperty(Sql.prototype, 'sql', { enumerable: true })
+Object.defineProperty(Sql.prototype, "text", { enumerable: true });
+Object.defineProperty(Sql.prototype, "values", { enumerable: true });
+Object.defineProperty(Sql.prototype, "sql", { enumerable: true });
 
 /**
  * Create a SQL query for a list of values.
