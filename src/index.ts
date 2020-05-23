@@ -33,44 +33,49 @@ export class Sql {
       return;
     }
 
+    this.rawStrings.length = rawStrings.length;
+
+    if (rawValues.length) {
+      this.rawValues.length = rawValues.length;
+
+      for (let child of rawValues) {
+        if (child instanceof Sql) {
+          this.rawStrings.length += child.strings.length;
+          this.rawValues.length += child.values.length - 1;
+        }
+      }
+    }
     this.rawStrings[0] = rawStrings[0];
 
     let i = 1;
     let strIn = 1;
-    let valIn = 0;
-    for (; i < rawStrings.length; ++i, ++strIn) {
+    for (; i < rawStrings.length; ++i) {
       const rawString = rawStrings[i];
-      const rawValue = rawValues[i - 1];
+      const child = rawValues[i - 1];
 
       // check for type
-      if (rawValue instanceof Sql) {
-        const strings = rawValue.strings;
-        const values = rawValue.values;
-        const len = strings.length;
+      if (child instanceof Sql) {
+        const len = child.values.length;
         // concat beginning
-        this.rawStrings[strIn - 1] = this.rawStrings[strIn - 1] || "";
-        this.rawStrings[strIn - 1] += strings[0];
+        this.rawStrings[strIn - 1] += child.strings[0];
 
-        if (len !== 1) {
-          for (let d = 1; d < len - 1; ++d) {
-            this.rawStrings[strIn++] = strings[d];
-            this.rawValues[valIn++] = values[d - 1];
-          }
-
-          this.rawValues[valIn++] = values[len - 2];
-
-          // set current
-          this.rawStrings[strIn] = strings[len - 1] + rawString;
-        } else {
-          // concat everything
-          this.rawStrings[strIn - 1] += rawString;
-          --strIn;
+        for (let d = 0; d < len; ++d) {
+          this.rawStrings[strIn] = child.strings[d + 1];
+          this.rawValues[strIn - 1] = child.values[d];
+          strIn++;
         }
+
+        // set current
+        this.rawStrings[strIn - 1] += rawString;
       } else {
         this.rawStrings[strIn] = rawString;
-        this.rawValues[valIn++] = rawValue;
+        this.rawValues[strIn - 1] = child;
+        ++strIn;
       }
     }
+
+    this.rawStrings.length = strIn;
+    this.rawValues.length = strIn - 1;
   }
 
   get values(): Value[] {
