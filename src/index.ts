@@ -7,8 +7,9 @@ export type RawValue = Value | Sql;
  * A SQL instance can be nested within each other to build SQL strings.
  */
 export class Sql {
-  private rawStrings: Array<string>;
-  private rawValues: Array<RawValue>;
+  values: Value[];
+  strings: string[];
+
   constructor(
     rawStrings: ReadonlyArray<string>,
     rawValues: ReadonlyArray<RawValue>
@@ -25,65 +26,47 @@ export class Sql {
       );
     }
 
-    this.rawStrings = [];
-    this.rawValues = [];
+    let valuesLength = rawValues.length;
+    let stringsLength = rawStrings.length;
 
-    if (rawValues.length === 0) {
-      this.rawStrings = rawStrings.slice(0);
-      return;
-    }
-
-    this.rawStrings.length = rawStrings.length;
-
-    if (rawValues.length) {
-      this.rawValues.length = rawValues.length;
-
-      for (let child of rawValues) {
-        if (child instanceof Sql) {
-          this.rawStrings.length += child.strings.length;
-          this.rawValues.length += child.values.length - 1;
-        }
-      }
-    }
-    this.rawStrings[0] = rawStrings[0];
-
-    let i = 1;
-    let strIn = 1;
-    for (; i < rawStrings.length; ++i) {
-      const rawString = rawStrings[i];
-      const child = rawValues[i - 1];
-
-      // check for type
+    for (const child of rawValues) {
       if (child instanceof Sql) {
-        const len = child.values.length;
-        // concat beginning
-        this.rawStrings[strIn - 1] += child.strings[0];
-
-        for (let d = 0; d < len; ++d) {
-          this.rawStrings[strIn] = child.strings[d + 1];
-          this.rawValues[strIn - 1] = child.values[d];
-          strIn++;
-        }
-
-        // set current
-        this.rawStrings[strIn - 1] += rawString;
-      } else {
-        this.rawStrings[strIn] = rawString;
-        this.rawValues[strIn - 1] = child;
-        ++strIn;
+        valuesLength += child.values.length - 1;
+        stringsLength += child.strings.length - 2;
       }
     }
 
-    this.rawStrings.length = strIn;
-    this.rawValues.length = strIn - 1;
-  }
+    this.values = new Array(valuesLength);
+    this.strings = new Array(stringsLength);
 
-  get values(): Value[] {
-    return this.rawValues;
-  }
+    this.strings[0] = rawStrings[0];
 
-  get strings(): string[] {
-    return this.rawStrings;
+    // Iterate over raw values, strings, and children. The value is always
+    // positioned between two strings, e.g. `index + 1`.
+    let index = 1;
+    let position = 0;
+    while (index < rawStrings.length) {
+      const child = rawValues[index - 1];
+      const rawString = rawStrings[index++];
+
+      // Check for nested `sql` queries.
+      if (child instanceof Sql) {
+        // Append child prefix text to current string.
+        this.strings[position] += child.strings[0];
+
+        let childIndex = 0;
+        while (childIndex < child.values.length) {
+          this.values[position++] = child.values[childIndex++];
+          this.strings[position] = child.strings[childIndex];
+        }
+
+        // Append raw string to current string.
+        this.strings[position] += rawString;
+      } else {
+        this.values[position++] = child;
+        this.strings[position] = rawString;
+      }
+    }
   }
 
   get text() {
@@ -106,9 +89,8 @@ export class Sql {
 }
 
 // Work around MySQL enumerable keys in issue #2.
-Object.defineProperty(Sql.prototype, "text", { enumerable: true });
-Object.defineProperty(Sql.prototype, "values", { enumerable: true });
 Object.defineProperty(Sql.prototype, "sql", { enumerable: true });
+Object.defineProperty(Sql.prototype, "text", { enumerable: true });
 
 /**
  * Create a SQL query for a list of values.

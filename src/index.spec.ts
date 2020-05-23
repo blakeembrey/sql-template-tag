@@ -72,7 +72,7 @@ describe("sql template tag", () => {
 
     for (const key in query) keys.push(key);
 
-    expect(keys).toEqual(["rawStrings", "rawValues", "values", "text", "sql"]);
+    expect(keys).toEqual(["values", "strings", "text", "sql"]);
   });
 
   describe("join", () => {

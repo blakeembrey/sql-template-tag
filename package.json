@@ -8,6 +8,7 @@
     "dist/"
   ],
   "scripts": {
+    "benchmark": "ts-node benchmarks/index.ts",
     "prettier": "prettier --write",
     "lint": "tslint \"src/**/*.ts\" --project tsconfig.json",
     "format": "npm run prettier -- README.md \"{.,src/**/}*.{js,jsx,json,ts,tsx,css,md,yml,yaml}\"",
@@ -76,14 +77,17 @@
     "node": ">=6"
   },
   "devDependencies": {
+    "@types/bytes": "^3.1.0",
     "@types/jest": "^25.2.3",
     "@types/node": "^14.0.5",
+    "bytes": "^3.1.0",
     "husky": "^4.2.5",
     "jest": "^26.0.1",
     "lint-staged": "^10.2.6",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.0",
     "ts-jest": "^26.0.0",
+    "ts-node": "^8.10.1",
     "tslint": "^6.1.2",
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-standard": "^9.0.0",
