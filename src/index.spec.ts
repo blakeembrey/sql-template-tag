@@ -66,13 +66,19 @@ describe("sql template tag", () => {
     expect(inspect(sql`SELECT * FROM test`)).toContain(`'SELECT * FROM test'`);
   });
 
-  it("keys should be enumerable", () => {
+  it("should have enumerable keys", () => {
     const query = sql`SELECT COUNT(1)`;
     const keys = [];
 
     for (const key in query) keys.push(key);
 
     expect(keys).toEqual(["values", "strings", "text", "sql"]);
+  });
+
+  it("should handle escaped back ticks", () => {
+    const query = sql`UPDATE user SET \`name\` = 'Taylor'`;
+
+    expect(query.text).toEqual("UPDATE user SET `name` = 'Taylor'");
   });
 
   describe("join", () => {
