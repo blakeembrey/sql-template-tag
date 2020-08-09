@@ -118,8 +118,8 @@ export const empty = raw("");
 /**
  * Create a SQL object from a template string.
  */
-export function sqltag(strings: TemplateStringsArray, ...values: RawValue[]) {
-  return new Sql(strings.raw, values);
+export function sqltag(strings: ReadonlyArray<string>, ...values: RawValue[]) {
+  return new Sql(strings, values);
 }
 
 /**
