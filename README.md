@@ -35,17 +35,37 @@ const query = sql`SELECT * FROM books WHERE author_id IN (${nested})`;
 sql`SELECT * FROM books ${hasIds ? sql`WHERE ids IN (${join(ids)})` : empty}`;
 ```
 
+### Join
+
+Accepts an array of values and returns a SQL instance with the values joined by the separator. E.g.
+
+```js
+const query = join([1, 2, 3]);
+
+query.sql; //=> "?, ?, ?"
+query.values; //=> [1, 2, 3]
+```
+
+### Raw
+
+Accepts a string and returns a SQL instance, useful if you want some part of the SQL to be dynamic.
+
+```js
+raw("SELECT"); // == sql`SELECT`
+```
+
+**Do not** accept user input to `raw`, this will create a SQL injection vulnerability.
+
+### Empty
+
+Simple placeholder value for an empty SQL string. Equivalent to `raw("")`.
+
 ## Related
 
-The main difference between this module and others is first-class TypeScript. There's also the `raw`, `join` and `empty` helpers. Specific differences are documented below:
+Some other modules exist that do something similar:
 
-**[`sql-template-strings`](https://github.com/felixfbecker/node-sql-template-strings)**
-
-Promotes mutation via chained methods and lacks nesting SQL statements. The idea to support both `sql` and `text` for `mysql` and `pg` compatibility came from here.
-
-**[`pg-template-tag`](https://github.com/XeCycle/pg-template-tag)**
-
-Missing TypeScript and MySQL support. This is the API I envisioned before starting development and, by supporting `pg` only, it has the ability to [dedupe `values`](https://github.com/XeCycle/pg-template-tag/issues/5#issuecomment-386875336). Supporting MySQL makes deduping impossible, because of `?` placeholders instead of `$<num>`, so I decided that was a premature optimisation here and opted to keep `mysql` support here instead.
+- [`sql-template-strings`](https://github.com/felixfbecker/node-sql-template-strings): promotes mutation via chained methods and lacks nesting SQL statements. The idea to support `sql` and `text` properties for dual `mysql` and `pg` compatibility came from here.
+- [`pg-template-tag`](https://github.com/XeCycle/pg-template-tag): missing TypeScript and MySQL support. This is the API I envisioned before writing this library, and by supporting `pg` only it has the ability to [dedupe `values`](https://github.com/XeCycle/pg-template-tag/issues/5#issuecomment-386875336).
 
 ## License
 
