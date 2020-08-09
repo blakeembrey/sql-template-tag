@@ -1,5 +1,5 @@
 import { inspect } from "util";
-import sql, { empty, join, Sql } from "./index";
+import sql, { empty, join, raw, Sql } from "./index";
 
 describe("sql template tag", () => {
   it("should generate sql", () => {
@@ -91,6 +91,16 @@ describe("sql template tag", () => {
 
     it("should error joining an empty list", () => {
       expect(() => join([])).toThrowError(TypeError);
+    });
+  });
+
+  describe("raw", () => {
+    it("should accept any string", () => {
+      const value = Math.random().toString();
+      const query = raw(value);
+
+      expect(query.sql).toEqual(value);
+      expect(query.values).toEqual([]);
     });
   });
 });
