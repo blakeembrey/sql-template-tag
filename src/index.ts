@@ -122,7 +122,9 @@ export function sqltag(strings: ReadonlyArray<string>, ...values: RawValue[]) {
   return new Sql(strings, values);
 }
 
+const sql = sqltag;
+
 /**
  * Standard `sql` tag.
  */
-export default sqltag;
+export default sql;
