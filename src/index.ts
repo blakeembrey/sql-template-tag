@@ -1,5 +1,3 @@
-const customInspect = Symbol.for("nodejs.util.inspect.custom");
-
 export type Value =
   | string
   | number
@@ -83,7 +81,7 @@ export class Sql {
     return this.strings.join("?");
   }
 
-  [customInspect]() {
+  inspect() {
     return {
       text: this.text,
       sql: this.sql,
