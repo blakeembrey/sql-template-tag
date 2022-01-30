@@ -1,6 +1,12 @@
-import { inspect } from "util";
+const customInspect = Symbol.for("nodejs.util.inspect.custom");
 
-export type Value = string | number | boolean | object | null | undefined;
+export type Value =
+  | string
+  | number
+  | boolean
+  | Record<string, unknown>
+  | null
+  | undefined;
 export type RawValue = Value | Sql;
 
 /**
@@ -77,7 +83,7 @@ export class Sql {
     return this.strings.join("?");
   }
 
-  [inspect.custom]() {
+  [customInspect]() {
     return {
       text: this.text,
       sql: this.sql,
