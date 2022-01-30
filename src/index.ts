@@ -90,10 +90,6 @@ export class Sql {
   }
 }
 
-// Work around MySQL enumerable keys in issue #2.
-Object.defineProperty(Sql.prototype, "sql", { enumerable: true });
-Object.defineProperty(Sql.prototype, "text", { enumerable: true });
-
 /**
  * Create a SQL query for a list of values.
  */
@@ -122,13 +118,9 @@ export const empty = raw("");
 /**
  * Create a SQL object from a template string.
  */
-export function sqltag(strings: ReadonlyArray<string>, ...values: RawValue[]) {
+export default function sql(
+  strings: ReadonlyArray<string>,
+  ...values: RawValue[]
+) {
   return new Sql(strings, values);
 }
-
-const sql = sqltag;
-
-/**
- * Standard `sql` tag.
- */
-export default sql;
