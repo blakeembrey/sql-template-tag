@@ -21,7 +21,7 @@
   },
   "main": "dist/index.js",
   "engines": {
-    "node": ">=6"
+    "node": ">=12"
   },
   "scripts": {
     "benchmark": "ts-node benchmarks/index.ts",
@@ -56,34 +56,6 @@
     "typescript": "^4.5.5"
   },
   "typings": "dist/index.d.ts",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "jest": {
-    "roots": [
-      "<rootDir>/src/"
-    ],
-    "transform": {
-      "\\.tsx?$": "ts-jest"
-    },
-    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(tsx?|jsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ]
-  },
-  "lint-staged": {
-    "*.{js,jsx,json,ts,tsx,css,md,yml,yaml}": [
-      "npm run prettier",
-      "git add"
-    ]
-  },
   "ts-scripts": {
     "project": [
       "tsconfig.build.json"
