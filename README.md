@@ -2,8 +2,8 @@
 
 [![NPM version][npm-image]][npm-url]
 [![NPM downloads][downloads-image]][downloads-url]
-[![Build status][travis-image]][travis-url]
-[![Test coverage][coveralls-image]][coveralls-url]
+[![Build status][build-image]][build-url]
+[![Build coverage][coverage-image]][coverage-url]
 
 > ES2015 tagged template string for preparing SQL statements, works with [`pg`](https://www.npmjs.com/package/pg) and [`mysql`](https://www.npmjs.com/package/mysql).
 
@@ -71,11 +71,11 @@ Some other modules exist that do something similar:
 
 MIT
 
-[npm-image]: https://img.shields.io/npm/v/sql-template-tag.svg?style=flat
+[npm-image]: https://img.shields.io/npm/v/sql-template-tag
 [npm-url]: https://npmjs.org/package/sql-template-tag
-[downloads-image]: https://img.shields.io/npm/dm/sql-template-tag.svg?style=flat
+[downloads-image]: https://img.shields.io/npm/dm/sql-template-tag
 [downloads-url]: https://npmjs.org/package/sql-template-tag
-[travis-image]: https://img.shields.io/travis/blakeembrey/sql-template-tag.svg?style=flat
-[travis-url]: https://travis-ci.org/blakeembrey/sql-template-tag
-[coveralls-image]: https://img.shields.io/coveralls/blakeembrey/sql-template-tag.svg?style=flat
-[coveralls-url]: https://coveralls.io/r/blakeembrey/sql-template-tag?branch=master
+[build-image]: https://img.shields.io/github/workflow/status/blakeembrey/sql-template-tag/CI/main
+[build-url]: https://github.com/blakeembrey/sql-template-tag/actions/workflows/ci.yml?query=branch%3Amain
+[coverage-image]: https://img.shields.io/codecov/c/gh/blakeembrey/sql-template-tag
+[coverage-url]: https://codecov.io/gh/blakeembrey/sql-template-tag
