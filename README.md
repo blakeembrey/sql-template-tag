@@ -5,7 +5,7 @@
 [![Build status][build-image]][build-url]
 [![Build coverage][coverage-image]][coverage-url]
 
-> ES2015 tagged template string for preparing SQL statements, works with [`pg`](https://www.npmjs.com/package/pg) and [`mysql`](https://www.npmjs.com/package/mysql).
+> ES2015 tagged template string for preparing SQL statements.
 
 ## Installation
 
@@ -59,6 +59,16 @@ raw("SELECT"); // == sql`SELECT`
 ### Empty
 
 Simple placeholder value for an empty SQL string. Equivalent to `raw("")`.
+
+## Recipes
+
+This package "just works" with [`pg`](https://www.npmjs.com/package/pg) and [`mysql`](https://www.npmjs.com/package/mysql).
+
+### [MSSQL](https://www.npmjs.com/package/mssql)
+
+```js
+mssql.query(query.strings, ...query.values);
+```
 
 ## Related
 
