@@ -2,9 +2,10 @@ export type Value =
   | string
   | number
   | boolean
-  | Record<string, unknown>
   | null
-  | undefined;
+  | undefined
+  | Value[]
+  | { [key: PropertyKey]: Value };
 export type RawValue = Value | Sql;
 
 /**
