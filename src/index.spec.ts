@@ -94,4 +94,20 @@ describe("sql template tag", () => {
       expect(query.values).toEqual([]);
     });
   });
+
+  describe("value typing", () => {
+    it.each([
+      ["string", "Blake"],
+      ["number", 123],
+      ["boolean", true],
+      ["Date", new Date("2010-01-01T00:00:00Z")],
+      ["null", null],
+      ["undefined", undefined],
+      ["string array", ["Blake", "Taylor"]],
+      ["object", { name: "Blake" }],
+    ])("should allow using %s as a value", (_type, value) => {
+      const query = sql`UPDATE user SET any_value = ${value}`;
+      expect(query.values).toEqual([value]);
+    });
+  });
 });
