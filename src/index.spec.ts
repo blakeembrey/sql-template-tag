@@ -85,12 +85,13 @@ describe("sql template tag", () => {
     });
 
     it("should join sql", () => {
-      const terms = [
-        sql`user.first_name LIKE ${"Test"}`,
-        sql`user.last_name LIKE ${"User"}`,
-      ];
-
-      const query = join(terms, " AND ");
+      const query = join(
+        [
+          sql`user.first_name LIKE ${"Test"}`,
+          sql`user.last_name LIKE ${"User"}`,
+        ],
+        " AND "
+      );
 
       expect(query.text).toEqual(
         "user.first_name LIKE $1 AND user.last_name LIKE $2"
@@ -99,12 +100,17 @@ describe("sql template tag", () => {
     });
 
     it("should support one term without separators", () => {
-      const terms = [sql`user.first_name LIKE ${"Test"}`];
-
-      const query = join(terms, " AND ");
+      const query = join([sql`user.first_name LIKE ${"Test"}`], " AND ");
 
       expect(query.text).toEqual("user.first_name LIKE $1");
       expect(query.values).toEqual(["Test"]);
+    });
+
+    it("should configure prefix and suffix characters", () => {
+      const query = join([1, 2, 3], ",", "(", ")");
+
+      expect(query.text).toEqual("($1,$2,$3)");
+      expect(query.values).toEqual([1, 2, 3]);
     });
   });
 
