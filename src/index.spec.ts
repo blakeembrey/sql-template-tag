@@ -83,6 +83,29 @@ describe("sql template tag", () => {
     it("should error joining an empty list", () => {
       expect(() => join([])).toThrowError(TypeError);
     });
+
+    it("should join sql", () => {
+      const terms = [
+        sql`user.first_name LIKE ${"Test"}`,
+        sql`user.last_name LIKE ${"User"}`,
+      ];
+
+      const query = join(terms, " AND ");
+
+      expect(query.text).toEqual(
+        "user.first_name LIKE $1 AND user.last_name LIKE $2"
+      );
+      expect(query.values).toEqual(["Test", "User"]);
+    });
+
+    it("should support one term without separators", () => {
+      const terms = [sql`user.first_name LIKE ${"Test"}`];
+
+      const query = join(terms, " AND ");
+
+      expect(query.text).toEqual("user.first_name LIKE $1");
+      expect(query.values).toEqual(["Test"]);
+    });
   });
 
   describe("raw", () => {
