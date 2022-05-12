@@ -1,4 +1,5 @@
 import { inspect } from "util";
+import { describe, it, expect } from "@jest/globals";
 import sql, { empty, join, raw, Sql } from "./index";
 
 describe("sql template tag", () => {
