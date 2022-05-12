@@ -37,13 +37,22 @@ sql`SELECT * FROM books ${hasIds ? sql`WHERE ids IN (${join(ids)})` : empty}`;
 
 ### Join
 
-Accepts an array of values and returns a SQL instance with the values joined by the separator. E.g.
+Accepts an array of values or SQL, and returns SQL with the values joined together using the separator.
 
 ```js
 const query = join([1, 2, 3]);
 
 query.sql; //=> "?, ?, ?"
 query.values; //=> [1, 2, 3]
+```
+
+**Pro tip:** You can set the second argument to change the join separator, for example:
+
+```js
+join(
+  [sql`first_name LIKE ${firstName}`, sql`last_name LIKE ${lastName}`],
+  " AND "
+); // => "first_name LIKE ? AND last_name LIKE ?"
 ```
 
 ### Raw
