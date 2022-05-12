@@ -1,4 +1,4 @@
-import sql, { Sql } from "../src/index";
+import sql, { Sql } from "../src/index.js";
 import bytes from "bytes";
 
 const before = process.memoryUsage();

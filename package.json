@@ -25,7 +25,7 @@
     "node": ">=12"
   },
   "scripts": {
-    "benchmark": "ts-node benchmarks/index.ts",
+    "benchmark": "node --loader=ts-node/esm benchmarks/index.ts",
     "format": "ts-scripts format",
     "lint": "ts-scripts lint",
     "prepare": "ts-scripts install && ts-scripts build",
