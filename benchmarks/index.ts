@@ -14,6 +14,7 @@ for (let i = 0; i < 1_000_000; i++) {
   queries.push(query);
 
   // Compute properties for perf testing.
+  query.sql;
   query.text;
   query.values;
 }

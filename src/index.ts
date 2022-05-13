@@ -20,67 +20,68 @@ export class Sql {
     rawStrings: ReadonlyArray<string>,
     rawValues: ReadonlyArray<RawValue>
   ) {
-    let valuesLength = rawValues.length;
-    let stringsLength = rawStrings.length;
+    if (rawStrings.length - 1 !== rawValues.length) {
+      if (rawStrings.length === 0) {
+        throw new TypeError("Expected at least 1 string");
+      }
 
-    if (stringsLength === 0) {
-      throw new TypeError("Expected at least 1 string");
-    }
-
-    if (stringsLength - 1 !== valuesLength) {
       throw new TypeError(
-        `Expected ${stringsLength} strings to have ${stringsLength - 1} values`
+        `Expected ${rawStrings.length} strings to have ${
+          rawStrings.length - 1
+        } values`
       );
     }
 
-    for (const child of rawValues) {
-      if (child instanceof Sql) {
-        valuesLength += child.values.length - 1;
-        stringsLength += child.strings.length - 2;
-      }
-    }
+    const valuesLength = rawValues.reduce<number>(
+      (len, value) => len + (value instanceof Sql ? value.values.length : 1),
+      0
+    );
 
     this.values = new Array(valuesLength);
-    this.strings = new Array(stringsLength);
+    this.strings = new Array(valuesLength + 1);
 
     this.strings[0] = rawStrings[0];
 
     // Iterate over raw values, strings, and children. The value is always
     // positioned between two strings, e.g. `index + 1`.
-    let index = 1;
-    let position = 0;
-    while (index < rawStrings.length) {
-      const child = rawValues[index - 1];
-      const rawString = rawStrings[index++];
+    let i = 0,
+      pos = 0;
+    while (i < rawValues.length) {
+      const child = rawValues[i++];
+      const rawString = rawStrings[i];
 
       // Check for nested `sql` queries.
       if (child instanceof Sql) {
         // Append child prefix text to current string.
-        this.strings[position] += child.strings[0];
+        this.strings[pos] += child.strings[0];
 
         let childIndex = 0;
         while (childIndex < child.values.length) {
-          this.values[position++] = child.values[childIndex++];
-          this.strings[position] = child.strings[childIndex];
+          this.values[pos++] = child.values[childIndex++];
+          this.strings[pos] = child.strings[childIndex];
         }
 
         // Append raw string to current string.
-        this.strings[position] += rawString;
+        this.strings[pos] += rawString;
       } else {
-        this.values[position++] = child;
-        this.strings[position] = rawString;
+        this.values[pos++] = child;
+        this.strings[pos] = rawString;
       }
     }
   }
 
   get text() {
-    return this.strings.reduce(
-      (text, part, index) => `${text}$${index}${part}`
-    );
+    let i = 1,
+      value = this.strings[0];
+    while (i < this.strings.length) value += `$${i}${this.strings[i++]}`;
+    return value;
   }
 
   get sql() {
-    return this.strings.join("?");
+    let i = 1,
+      value = this.strings[0];
+    while (i < this.strings.length) value += `?${this.strings[i++]}`;
+    return value;
   }
 
   inspect() {

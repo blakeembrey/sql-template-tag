@@ -11,6 +11,15 @@ describe("sql template tag", () => {
     expect(query.values).toEqual([]);
   });
 
+  it("should embed sql in sql", () => {
+    const tableName = sql`books`;
+    const query = sql`SELECT * FROM ${tableName}`;
+
+    expect(query.sql).toEqual("SELECT * FROM books");
+    expect(query.text).toEqual("SELECT * FROM books");
+    expect(query.values).toEqual([]);
+  });
+
   it("should store values", () => {
     const name = "Blake";
     const query = sql`SELECT * FROM books WHERE author = ${name}`;
