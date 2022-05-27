@@ -79,6 +79,27 @@ This package "just works" with [`pg`](https://www.npmjs.com/package/pg) and [`my
 mssql.query(query.strings, ...query.values);
 ```
 
+### Stricter TypeScript
+
+The default value is `unknown` to support [every possible input](https://github.com/blakeembrey/sql-template-tag/pull/26). If you want stricter TypeScript values you can create a new `sql` template tag function.
+
+```ts
+import { Sql } from "sql-template-tag";
+
+type SupportedValue =
+  | string
+  | number
+  | SupportedValue[]
+  | { [key: string]: SupportedValue };
+
+function sql(
+  strings: ReadonlyArray<string>,
+  ...values: Array<SupportedValue | Sql>
+) {
+  return new Sql(strings, values);
+}
+```
+
 ## Related
 
 Some other modules exist that do something similar:

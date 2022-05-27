@@ -1,12 +1,11 @@
-export type Value =
-  | string
-  | number
-  | boolean
-  | Date
-  | null
-  | undefined
-  | Value[]
-  | { [key: PropertyKey]: Value };
+/**
+ * Values supported by SQL engine.
+ */
+export type Value = unknown;
+
+/**
+ * Supported value or SQL instance.
+ */
 export type RawValue = Value | Sql;
 
 /**
