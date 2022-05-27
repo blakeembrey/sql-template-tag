@@ -22,7 +22,7 @@
   "type": "module",
   "exports": "./dist/index.js",
   "engines": {
-    "node": ">=12"
+    "node": ">=14"
   },
   "scripts": {
     "benchmark": "node --loader=ts-node/esm benchmarks/index.ts",
