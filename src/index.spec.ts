@@ -1,6 +1,6 @@
 import { inspect } from "util";
 import { describe, it, expect } from "@jest/globals";
-import sql, { empty, join, raw, Sql } from "./index.js";
+import sql, { empty, join, joinNested, raw, Sql } from "./index.js";
 
 describe("sql template tag", () => {
   it("should generate sql", () => {
@@ -147,6 +147,29 @@ describe("sql template tag", () => {
     ])("should allow using %s as a value", (_type, value) => {
       const query = sql`UPDATE user SET any_value = ${value}`;
       expect(query.values).toEqual([value]);
+    });
+  });
+
+  describe("joinNested", () => {
+    it("should join nested list", () => {
+      const query = joinNested([
+        [1, 2, 3],
+        [5, 2, 3],
+      ]);
+
+      expect(query.text).toEqual("($1,$2,$3),($4,$5,$6)");
+      expect(query.values).toEqual([1, 2, 3, 5, 2, 3]);
+    });
+
+    it("should error joining an empty list", () => {
+      expect(() => joinNested([])).toThrowError(TypeError);
+    });
+
+    it("should error joining an nested empty list", () => {
+      expect(() => joinNested([[]])).toThrowError(TypeError);
+    });
+    it("should error joining an nested non uniform list", () => {
+      expect(() => joinNested([[1, 2], [1, 3], [1]])).toThrowError(TypeError);
     });
   });
 });
