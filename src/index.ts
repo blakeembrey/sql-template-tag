@@ -49,6 +49,20 @@ export class Sql {
       const child = rawValues[i++];
       const rawString = rawStrings[i];
 
+      // Check for nested `sql` query after IN keyword in development environment
+      if (
+        process.env.NODE_ENV === "development" ||
+        process.env.NODE_ENV === "test"
+      ) {
+        if (rawStrings[i - 1].endsWith("IN (")) {
+          if (!(child instanceof Sql)) {
+            throw new TypeError(
+              "Expected a value after 'IN' keyword should be the nested sql queries"
+            );
+          }
+        }
+      }
+
       // Check for nested `sql` queries.
       if (child instanceof Sql) {
         // Append child prefix text to current string.

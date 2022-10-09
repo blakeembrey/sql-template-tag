@@ -72,6 +72,13 @@ describe("sql template tag", () => {
     );
   });
 
+  it("should throw when a value after 'IN' keyword is not nested sql", () => {
+    const ids = [1, 2, 3];
+    expect(() => sql`SELECT * FROM books WHERE id IN (${ids})`).toThrowError(
+      "Expected a value after 'IN' keyword should be the nested sql queries"
+    );
+  });
+
   it("should inspect sql instance", () => {
     expect(inspect(sql`SELECT * FROM test`)).toContain(`'SELECT * FROM test'`);
   });
