@@ -30,7 +30,7 @@
     "lint": "ts-scripts lint",
     "prepare": "ts-scripts install && ts-scripts build",
     "specs": "ts-scripts specs",
-    "test": "ts-scripts test"
+    "test": "npm run format && ts-scripts test"
   },
   "files": [
     "dist/"
