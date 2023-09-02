@@ -12,13 +12,10 @@ export type RawValue = Value | Sql;
  * A SQL instance can be nested within each other to build SQL strings.
  */
 export class Sql {
-  values: Value[];
-  strings: string[];
+  readonly values: Value[];
+  readonly strings: string[];
 
-  constructor(
-    rawStrings: ReadonlyArray<string>,
-    rawValues: ReadonlyArray<RawValue>
-  ) {
+  constructor(rawStrings: readonly string[], rawValues: readonly RawValue[]) {
     if (rawStrings.length - 1 !== rawValues.length) {
       if (rawStrings.length === 0) {
         throw new TypeError("Expected at least 1 string");
@@ -96,7 +93,7 @@ export class Sql {
  * Create a SQL query for a list of values.
  */
 export function join(
-  values: RawValue[],
+  values: readonly RawValue[],
   separator = ",",
   prefix = "",
   suffix = ""
@@ -129,8 +126,8 @@ export const empty = raw("");
  * Create a SQL object from a template string.
  */
 export default function sql(
-  strings: ReadonlyArray<string>,
-  ...values: RawValue[]
+  strings: readonly string[],
+  ...values: readonly RawValue[]
 ) {
   return new Sql(strings, values);
 }
