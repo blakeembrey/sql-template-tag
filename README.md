@@ -115,7 +115,7 @@ MIT
 [npm-url]: https://npmjs.org/package/sql-template-tag
 [downloads-image]: https://img.shields.io/npm/dm/sql-template-tag
 [downloads-url]: https://npmjs.org/package/sql-template-tag
-[build-image]: https://img.shields.io/github/workflow/status/blakeembrey/sql-template-tag/CI/main
+[build-image]: https://img.shields.io/github/actions/workflow/status/blakeembrey/sql-template-tag/ci.yml?branch=main
 [build-url]: https://github.com/blakeembrey/sql-template-tag/actions/workflows/ci.yml?query=branch%3Amain
 [coverage-image]: https://img.shields.io/codecov/c/gh/blakeembrey/sql-template-tag
 [coverage-url]: https://codecov.io/gh/blakeembrey/sql-template-tag
