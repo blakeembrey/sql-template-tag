@@ -111,6 +111,38 @@ export function join(
 }
 
 /**
+ * Create a SQL query for a list of structred values. Very useful for bulk
+ * inserts.
+ */
+export function joinNested(values: Array<RawValue[]>, separator = ",") {
+  if (values.length === 0) {
+    throw new TypeError(
+      "Expected `joinNested([][])` to be called with an array of multiple elements, but got an empty array"
+    );
+  }
+
+  const len = values[0].length;
+
+  if (len === 0) {
+    throw new TypeError(
+      "Expected `joinNested([][])` to be called with an nested array of multiple elements, but got an empty array"
+    );
+  }
+
+  const v = values.map((x, index) => {
+    if (x.length !== len) {
+      throw new TypeError(
+        `Expected joinNested([][${len}]) instead param at index ${index} had a length of ${x.length}`
+      );
+    }
+
+    return new Sql(["(", ...Array(x.length - 1).fill(separator), ")"], x);
+  });
+
+  return new Sql(["", ...Array(v.length - 1).fill(separator), ""], v);
+}
+
+/**
  * Create raw SQL statement.
  */
 export function raw(value: string) {
