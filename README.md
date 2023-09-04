@@ -15,7 +15,7 @@ npm install sql-template-tag --save
 
 ## Usage
 
-```ts
+```js
 import sql, { empty, join, raw } from "sql-template-tag";
 
 const query = sql`SELECT * FROM books WHERE id = ${id}`;
@@ -86,7 +86,7 @@ query.values; //=> ["Blake", "Bob", "Joe"]
 
 ## Recipes
 
-This package "just works" with [`pg`](https://www.npmjs.com/package/pg) and [`mysql`](https://www.npmjs.com/package/mysql).
+This package "just works" with [`pg`](https://www.npmjs.com/package/pg), [`mysql`](https://www.npmjs.com/package/mysql) and [`sqlite`](https://www.npmjs.com/package/sqlite).
 
 ### [MSSQL](https://www.npmjs.com/package/mssql)
 
