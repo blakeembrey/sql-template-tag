@@ -1,6 +1,6 @@
 import { inspect } from "util";
 import { describe, it, expect } from "@jest/globals";
-import sql, { empty, join, joinNested, raw, Sql } from "./index.js";
+import sql, { empty, join, bulk, raw, Sql } from "./index.js";
 
 describe("sql template tag", () => {
   it("should generate sql", () => {
@@ -150,9 +150,9 @@ describe("sql template tag", () => {
     });
   });
 
-  describe("joinNested", () => {
+  describe("bulk", () => {
     it("should join nested list", () => {
-      const query = joinNested([
+      const query = bulk([
         [1, 2, 3],
         [5, 2, 3],
       ]);
@@ -162,14 +162,15 @@ describe("sql template tag", () => {
     });
 
     it("should error joining an empty list", () => {
-      expect(() => joinNested([])).toThrowError(TypeError);
+      expect(() => bulk([])).toThrowError(TypeError);
     });
 
     it("should error joining an nested empty list", () => {
-      expect(() => joinNested([[]])).toThrowError(TypeError);
+      expect(() => bulk([[]])).toThrowError(TypeError);
     });
+
     it("should error joining an nested non uniform list", () => {
-      expect(() => joinNested([[1, 2], [1, 3], [1]])).toThrowError(TypeError);
+      expect(() => bulk([[1, 2], [1, 3], [1]])).toThrowError(TypeError);
     });
   });
 });

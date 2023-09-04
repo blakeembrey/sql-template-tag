@@ -42,11 +42,11 @@ Accepts an array of values or SQL, and returns SQL with the values joined togeth
 ```js
 const query = join([1, 2, 3]);
 
-query.sql; //=> "?, ?, ?"
+query.sql; //=> "?,?,?"
 query.values; //=> [1, 2, 3]
 ```
 
-**Pro tip:** You can set the second argument to change the join separator, for example:
+**Tip:** You can set the second argument to change the join separator, for example:
 
 ```js
 join(
@@ -68,6 +68,21 @@ raw("SELECT"); // == sql`SELECT`
 ### Empty
 
 Simple placeholder value for an empty SQL string. Equivalent to `raw("")`.
+
+### Bulk
+
+Accepts an array of arrays, and returns the SQL with the values joined together in a format useful for bulk inserts.
+
+```js
+const query = `INSERT INTO users (name) VALUES ${bulk([
+  ["Blake"],
+  ["Bob"],
+  ["Joe"],
+])}`;
+
+query.sql; //=> "INSERT INTO users (name) VALUES (?),(?),(?)"
+query.values; //=> ["Blake", "Bob", "Joe"]
+```
 
 ## Recipes
 

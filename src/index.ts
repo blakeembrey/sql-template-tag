@@ -111,35 +111,36 @@ export function join(
 }
 
 /**
- * Create a SQL query for a list of structred values. Very useful for bulk
- * inserts.
+ * Create a SQL query for a list of structured values.
  */
-export function joinNested(values: Array<RawValue[]>, separator = ",") {
-  if (values.length === 0) {
+export function bulk(
+  data: ReadonlyArray<ReadonlyArray<RawValue>>,
+  separator = ",",
+  prefix = "",
+  suffix = ""
+) {
+  const length = data.length && data[0].length;
+
+  if (length === 0) {
     throw new TypeError(
-      "Expected `joinNested([][])` to be called with an array of multiple elements, but got an empty array"
+      "Expected `bulk([][])` to be called with a nested array of multiple elements, but got an empty array"
     );
   }
 
-  const len = values[0].length;
-
-  if (len === 0) {
-    throw new TypeError(
-      "Expected `joinNested([][])` to be called with an nested array of multiple elements, but got an empty array"
-    );
-  }
-
-  const v = values.map((x, index) => {
-    if (x.length !== len) {
+  const values = data.map((item, index) => {
+    if (item.length !== length) {
       throw new TypeError(
-        `Expected joinNested([][${len}]) instead param at index ${index} had a length of ${x.length}`
+        `Expected \`bulk([${index}][])\` to have a length of ${length}, but got ${item.length}`
       );
     }
 
-    return new Sql(["(", ...Array(x.length - 1).fill(separator), ")"], x);
+    return new Sql(["(", ...Array(item.length - 1).fill(separator), ")"], item);
   });
 
-  return new Sql(["", ...Array(v.length - 1).fill(separator), ""], v);
+  return new Sql(
+    [prefix, ...Array(values.length - 1).fill(separator), suffix],
+    values
+  );
 }
 
 /**
