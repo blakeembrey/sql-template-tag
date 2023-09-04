@@ -1,5 +1,5 @@
 import { inspect } from "util";
-import { describe, it, expect } from "@jest/globals";
+import { describe, it, expect } from "vitest";
 import sql, { empty, join, bulk, raw, Sql } from "./index.js";
 
 describe("sql template tag", () => {

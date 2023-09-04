@@ -1,6 +1,7 @@
 {
   "extends": "@borderless/ts-scripts/configs/tsconfig.json",
   "compilerOptions": {
+    "module": "Node16",
     "outDir": "dist",
     "rootDir": "src",
     "types": ["node"]

@@ -26,9 +26,11 @@
   },
   "scripts": {
     "benchmark": "node --loader=ts-node/esm benchmarks/index.ts",
+    "build": "ts-scripts build",
     "format": "ts-scripts format",
     "lint": "ts-scripts lint",
-    "prepare": "ts-scripts install && ts-scripts build",
+    "prepare": "ts-scripts install",
+    "prepublishOnly": "npm run build",
     "specs": "ts-scripts specs",
     "test": "ts-scripts test"
   },
@@ -47,14 +49,15 @@
     "mysql"
   ],
   "devDependencies": {
-    "@borderless/ts-scripts": "^0.12.0",
-    "@jest/globals": "^28.1.0",
+    "@borderless/ts-scripts": "^0.13.6",
     "@types/bytes": "^3.1.0",
-    "@types/node": "^17.0.13",
+    "@types/node": "^20.5.9",
+    "@vitest/coverage-v8": "^0.34.3",
     "bytes": "^3.1.0",
-    "rimraf": "^3.0.0",
+    "rimraf": "^5.0.1",
     "ts-node": "^10.4.0",
-    "typescript": "^4.7.2"
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.3"
   },
   "typings": "dist/index.d.ts",
   "ts-scripts": {
