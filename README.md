@@ -51,7 +51,7 @@ query.values; //=> [1, 2, 3]
 ```js
 join(
   [sql`first_name LIKE ${firstName}`, sql`last_name LIKE ${lastName}`],
-  " AND "
+  " AND ",
 ); // => "first_name LIKE ? AND last_name LIKE ?"
 ```
 

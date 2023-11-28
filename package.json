@@ -1,42 +1,7 @@
 {
   "name": "sql-template-tag",
   "version": "5.1.0",
-  "publishConfig": {
-    "access": "public"
-  },
   "description": "ES2015 tagged template string for preparing SQL statements, works with `pg` and `mysql`",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/blakeembrey/sql-template-tag.git"
-  },
-  "author": {
-    "name": "Blake Embrey",
-    "email": "hello@blakeembrey.com",
-    "url": "http://blakeembrey.me"
-  },
-  "homepage": "https://github.com/blakeembrey/sql-template-tag",
-  "bugs": {
-    "url": "https://github.com/blakeembrey/sql-template-tag/issues"
-  },
-  "type": "module",
-  "exports": "./dist/index.js",
-  "engines": {
-    "node": ">=14"
-  },
-  "scripts": {
-    "benchmark": "tsx benchmarks/index.ts",
-    "build": "ts-scripts build",
-    "format": "ts-scripts format",
-    "lint": "ts-scripts lint",
-    "prepare": "ts-scripts install",
-    "prepublishOnly": "npm run build",
-    "specs": "ts-scripts specs",
-    "test": "ts-scripts test"
-  },
-  "files": [
-    "dist/"
-  ],
   "keywords": [
     "sql",
     "template",
@@ -48,8 +13,38 @@
     "postgres",
     "mysql"
   ],
+  "homepage": "https://github.com/blakeembrey/sql-template-tag",
+  "bugs": {
+    "url": "https://github.com/blakeembrey/sql-template-tag/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blakeembrey/sql-template-tag.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Blake Embrey",
+    "email": "hello@blakeembrey.com",
+    "url": "http://blakeembrey.me"
+  },
+  "type": "module",
+  "exports": "./dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "benchmark": "tsx benchmarks/index.ts",
+    "build": "ts-scripts build",
+    "format": "ts-scripts format",
+    "lint": "ts-scripts lint",
+    "prepare": "ts-scripts install",
+    "prepublishOnly": "npm run build",
+    "specs": "ts-scripts specs",
+    "test": "ts-scripts test"
+  },
   "devDependencies": {
-    "@borderless/ts-scripts": "^0.13.6",
+    "@borderless/ts-scripts": "^0.15.0",
     "@types/bytes": "^3.1.0",
     "@types/node": "^20.5.9",
     "@vitest/coverage-v8": "^0.34.3",
@@ -57,9 +52,14 @@
     "rimraf": "^5.0.1",
     "tsx": "^4.6.0",
     "typescript": "^5.2.2",
-    "vitest": "^0.34.3"
+    "vitest": "^0.34.6"
   },
-  "typings": "dist/index.d.ts",
+  "engines": {
+    "node": ">=14"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "ts-scripts": {
     "project": [
       "tsconfig.build.json"

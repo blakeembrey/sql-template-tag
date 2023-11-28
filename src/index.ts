@@ -24,13 +24,13 @@ export class Sql {
       throw new TypeError(
         `Expected ${rawStrings.length} strings to have ${
           rawStrings.length - 1
-        } values`
+        } values`,
       );
     }
 
     const valuesLength = rawValues.reduce<number>(
       (len, value) => len + (value instanceof Sql ? value.values.length : 1),
-      0
+      0,
     );
 
     this.values = new Array(valuesLength);
@@ -106,17 +106,17 @@ export function join(
   values: readonly RawValue[],
   separator = ",",
   prefix = "",
-  suffix = ""
+  suffix = "",
 ) {
   if (values.length === 0) {
     throw new TypeError(
-      "Expected `join([])` to be called with an array of multiple elements, but got an empty array"
+      "Expected `join([])` to be called with an array of multiple elements, but got an empty array",
     );
   }
 
   return new Sql(
     [prefix, ...Array(values.length - 1).fill(separator), suffix],
-    values
+    values,
   );
 }
 
@@ -127,20 +127,20 @@ export function bulk(
   data: ReadonlyArray<ReadonlyArray<RawValue>>,
   separator = ",",
   prefix = "",
-  suffix = ""
+  suffix = "",
 ) {
   const length = data.length && data[0].length;
 
   if (length === 0) {
     throw new TypeError(
-      "Expected `bulk([][])` to be called with a nested array of multiple elements, but got an empty array"
+      "Expected `bulk([][])` to be called with a nested array of multiple elements, but got an empty array",
     );
   }
 
   const values = data.map((item, index) => {
     if (item.length !== length) {
       throw new TypeError(
-        `Expected \`bulk([${index}][])\` to have a length of ${length}, but got ${item.length}`
+        `Expected \`bulk([${index}][])\` to have a length of ${length}, but got ${item.length}`,
       );
     }
 
@@ -149,7 +149,7 @@ export function bulk(
 
   return new Sql(
     [prefix, ...Array(values.length - 1).fill(separator), suffix],
-    values
+    values,
   );
 }
 
