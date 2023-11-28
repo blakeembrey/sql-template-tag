@@ -8,6 +8,7 @@ describe("sql template tag", () => {
 
     expect(query.sql).toEqual("SELECT * FROM books");
     expect(query.text).toEqual("SELECT * FROM books");
+    expect(query.statement).toEqual("SELECT * FROM books");
     expect(query.values).toEqual([]);
   });
 
@@ -17,6 +18,7 @@ describe("sql template tag", () => {
 
     expect(query.sql).toEqual("SELECT * FROM books");
     expect(query.text).toEqual("SELECT * FROM books");
+    expect(query.statement).toEqual("SELECT * FROM books");
     expect(query.values).toEqual([]);
   });
 
@@ -26,6 +28,7 @@ describe("sql template tag", () => {
 
     expect(query.sql).toEqual("SELECT * FROM books WHERE author = ?");
     expect(query.text).toEqual("SELECT * FROM books WHERE author = $1");
+    expect(query.statement).toEqual("SELECT * FROM books WHERE author = :1");
     expect(query.values).toEqual([name]);
   });
 
@@ -33,8 +36,14 @@ describe("sql template tag", () => {
     const subquery = sql`SELECT id FROM authors WHERE name = ${"Blake"}`;
     const query = sql`SELECT * FROM books WHERE author_id IN (${subquery})`;
 
+    expect(query.sql).toEqual(
+      "SELECT * FROM books WHERE author_id IN (SELECT id FROM authors WHERE name = ?)"
+    );
     expect(query.text).toEqual(
       "SELECT * FROM books WHERE author_id IN (SELECT id FROM authors WHERE name = $1)"
+    );
+    expect(query.statement).toEqual(
+      "SELECT * FROM books WHERE author_id IN (SELECT id FROM authors WHERE name = :1)"
     );
     expect(query.values).toEqual(["Blake"]);
   });
@@ -51,6 +60,9 @@ describe("sql template tag", () => {
     expect(query.text).toEqual(
       "SELECT * FROM books WHERE id IN ($1,$2,$3) OR author_id IN ($4,$5,$6)"
     );
+    expect(query.statement).toEqual(
+      "SELECT * FROM books WHERE id IN (:1,:2,:3) OR author_id IN (:4,:5,:6)"
+    );
     expect(query.values).toEqual([1, 2, 3, 1, 2, 3]);
   });
 
@@ -59,6 +71,7 @@ describe("sql template tag", () => {
 
     expect(query.sql).toEqual("SELECT * FROM books ");
     expect(query.text).toEqual("SELECT * FROM books ");
+    expect(query.statement).toEqual("SELECT * FROM books ");
     expect(query.values).toEqual([]);
   });
 

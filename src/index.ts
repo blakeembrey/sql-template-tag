@@ -67,16 +67,26 @@ export class Sql {
   }
 
   get text() {
-    let i = 1,
-      value = this.strings[0];
-    while (i < this.strings.length) value += `$${i}${this.strings[i++]}`;
+    const len = this.strings.length;
+    let i = 1;
+    let value = this.strings[0];
+    while (i < len) value += `$${i}${this.strings[i++]}`;
     return value;
   }
 
   get sql() {
-    let i = 1,
-      value = this.strings[0];
-    while (i < this.strings.length) value += `?${this.strings[i++]}`;
+    const len = this.strings.length;
+    let i = 1;
+    let value = this.strings[0];
+    while (i < len) value += `?${this.strings[i++]}`;
+    return value;
+  }
+
+  get statement() {
+    const len = this.strings.length;
+    let i = 1;
+    let value = this.strings[0];
+    while (i < len) value += `:${i}${this.strings[i++]}`;
     return value;
   }
 

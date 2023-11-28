@@ -94,6 +94,12 @@ This package "just works" with [`pg`](https://www.npmjs.com/package/pg), [`mysql
 mssql.query(query.strings, ...query.values);
 ```
 
+### [OracleDB](https://github.com/oracle/node-oracledb)
+
+```js
+session.execute(query.statement, query.values);
+```
+
 ### Stricter TypeScript
 
 The default value is `unknown` to support [every possible input](https://github.com/blakeembrey/sql-template-tag/pull/26). If you want stricter TypeScript values you can create a new `sql` template tag function.
