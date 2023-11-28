@@ -25,7 +25,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "benchmark": "node --loader=ts-node/esm benchmarks/index.ts",
+    "benchmark": "tsx benchmarks/index.ts",
     "build": "ts-scripts build",
     "format": "ts-scripts format",
     "lint": "ts-scripts lint",
@@ -55,7 +55,7 @@
     "@vitest/coverage-v8": "^0.34.3",
     "bytes": "^3.1.0",
     "rimraf": "^5.0.1",
-    "ts-node": "^10.4.0",
+    "tsx": "^4.6.0",
     "typescript": "^5.2.2",
     "vitest": "^0.34.3"
   },
