@@ -74,7 +74,7 @@ Simple placeholder value for an empty SQL string. Equivalent to `raw("")`.
 Accepts an array of arrays, and returns the SQL with the values joined together in a format useful for bulk inserts.
 
 ```js
-const query = `INSERT INTO users (name) VALUES ${bulk([
+const query = sql`INSERT INTO users (name) VALUES ${bulk([
   ["Blake"],
   ["Bob"],
   ["Joe"],
