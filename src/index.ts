@@ -66,14 +66,6 @@ export class Sql {
     }
   }
 
-  get text() {
-    const len = this.strings.length;
-    let i = 1;
-    let value = this.strings[0];
-    while (i < len) value += `$${i}${this.strings[i++]}`;
-    return value;
-  }
-
   get sql() {
     const len = this.strings.length;
     let i = 1;
@@ -90,10 +82,19 @@ export class Sql {
     return value;
   }
 
+  get text() {
+    const len = this.strings.length;
+    let i = 1;
+    let value = this.strings[0];
+    while (i < len) value += `$${i}${this.strings[i++]}`;
+    return value;
+  }
+
   inspect() {
     return {
-      text: this.text,
       sql: this.sql,
+      statement: this.statement,
+      text: this.text,
       values: this.values,
     };
   }
