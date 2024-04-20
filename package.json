@@ -1,7 +1,7 @@
 {
   "name": "sql-template-tag",
   "version": "5.2.0",
-  "description": "ES2015 tagged template string for preparing SQL statements, works with `pg` and `mysql`",
+  "description": "ES2015 tagged template string for preparing SQL statements, works with `pg`, `mysql`, `sqlite` and `oracledb`",
   "keywords": [
     "sql",
     "template",
@@ -11,7 +11,10 @@
     "es6",
     "pg",
     "postgres",
-    "mysql"
+    "mysql",
+    "sqlite",
+    "oracledb",
+    "oracle"
   ],
   "homepage": "https://github.com/blakeembrey/sql-template-tag",
   "bugs": {

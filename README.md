@@ -22,10 +22,12 @@ const query = sql`SELECT * FROM books WHERE id = ${id}`;
 
 query.sql; //=> "SELECT * FROM books WHERE id = ?"
 query.text; //=> "SELECT * FROM books WHERE id = $1"
+query.statement; //=> "SELECT * FROM books WHERE id = :1"
 query.values; //=> [id]
 
 pg.query(query); // Uses `text` and `values`.
 mysql.query(query); // Uses `sql` and `values`.
+oracledb.execute(query); // Uses `statement` and `values`.
 
 // Embed SQL instances inside SQL instances.
 const nested = sql`SELECT id FROM authors WHERE name = ${"Blake"}`;
@@ -86,18 +88,12 @@ query.values; //=> ["Blake", "Bob", "Joe"]
 
 ## Recipes
 
-This package "just works" with [`pg`](https://www.npmjs.com/package/pg), [`mysql`](https://www.npmjs.com/package/mysql) and [`sqlite`](https://www.npmjs.com/package/sqlite).
+This package "just works" with [`pg`](https://www.npmjs.com/package/pg), [`mysql`](https://www.npmjs.com/package/mysql), [`sqlite`](https://www.npmjs.com/package/sqlite) and [`oracledb`](https://www.npmjs.com/package/node-oracledb).
 
 ### [MSSQL](https://www.npmjs.com/package/mssql)
 
 ```js
 mssql.query(query.strings, ...query.values);
-```
-
-### [OracleDB](https://github.com/oracle/node-oracledb)
-
-```js
-session.execute(query.statement, query.values);
 ```
 
 ### Stricter TypeScript
