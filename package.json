@@ -50,12 +50,12 @@
     "@borderless/ts-scripts": "^0.15.0",
     "@types/bytes": "^3.1.0",
     "@types/node": "^20.5.9",
-    "@vitest/coverage-v8": "^0.34.3",
+    "@vitest/coverage-v8": "^1.5.0",
     "bytes": "^3.1.0",
     "rimraf": "^5.0.1",
     "tsx": "^4.6.0",
     "typescript": "^5.2.2",
-    "vitest": "^0.34.6"
+    "vitest": "^1.5.0"
   },
   "engines": {
     "node": ">=14"
