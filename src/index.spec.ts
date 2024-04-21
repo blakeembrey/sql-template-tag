@@ -1,6 +1,6 @@
 import { inspect } from "util";
 import { describe, it, expect } from "vitest";
-import sql, { empty, join, bulk, raw, Sql } from "./index.js";
+import sql, { empty, join, bulk, raw, Sql, BIND_PARAM } from "./index.js";
 
 describe("sql template tag", () => {
   it("should generate sql", () => {
@@ -160,6 +160,42 @@ describe("sql template tag", () => {
     ])("should allow using %s as a value", (_type, value) => {
       const query = sql`UPDATE user SET any_value = ${value}`;
       expect(query.values).toEqual([value]);
+    });
+  });
+
+  describe("bind parameters", () => {
+    it("should bind parameters", () => {
+      const query = sql`SELECT * FROM books WHERE author = ${BIND_PARAM}`;
+      const values = query.bind("Blake");
+
+      expect(query.text).toEqual("SELECT * FROM books WHERE author = $1");
+      expect(query.values).toEqual([BIND_PARAM]);
+      expect(values).toEqual(["Blake"]);
+    });
+
+    it("should merge with other values", () => {
+      const query = sql`SELECT * FROM books WHERE author = ${BIND_PARAM} OR author_id = ${"Taylor"}`;
+      const values = query.bind("Blake");
+
+      expect(query.text).toEqual(
+        "SELECT * FROM books WHERE author = $1 OR author_id = $2",
+      );
+      expect(query.values).toEqual([BIND_PARAM, "Taylor"]);
+      expect(values).toEqual(["Blake", "Taylor"]);
+    });
+
+    it("should error when binding too many parameters", () => {
+      const query = sql`SELECT * FROM books WHERE author = ${BIND_PARAM}`;
+      expect(() => query.bind("Blake", "Taylor")).toThrowError(
+        "Expected 1 parameters to be bound, but got 2",
+      );
+    });
+
+    it("should error when binding too few parameters", () => {
+      const query = sql`SELECT * FROM books WHERE author = ${BIND_PARAM}`;
+      expect(() => query.bind()).toThrowError(
+        "Expected 1 parameters to be bound, but got 0",
+      );
     });
   });
 

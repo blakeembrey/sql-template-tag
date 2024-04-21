@@ -1,4 +1,9 @@
 /**
+ * A param that's expected to be bound later of included in `values`.
+ */
+export const BIND_PARAM = Symbol("BIND_PARAM");
+
+/**
  * Values supported by SQL engine.
  */
 export type Value = unknown;
@@ -12,6 +17,7 @@ export type RawValue = Value | Sql;
  * A SQL instance can be nested within each other to build SQL strings.
  */
 export class Sql {
+  readonly bindParams = 0;
   readonly values: Value[];
   readonly strings: string[];
 
@@ -53,8 +59,12 @@ export class Sql {
 
         let childIndex = 0;
         while (childIndex < child.values.length) {
-          this.values[pos++] = child.values[childIndex++];
-          this.strings[pos] = child.strings[childIndex];
+          const value = child.values[childIndex++];
+          const str = child.strings[childIndex];
+
+          this.values[pos++] = value;
+          this.strings[pos] = str;
+          if (value === BIND_PARAM) this.bindParams++;
         }
 
         // Append raw string to current string.
@@ -62,6 +72,7 @@ export class Sql {
       } else {
         this.values[pos++] = child;
         this.strings[pos] = rawString;
+        if (child === BIND_PARAM) this.bindParams++;
       }
     }
   }
@@ -88,6 +99,23 @@ export class Sql {
     let value = this.strings[0];
     while (i < len) value += `$${i}${this.strings[i++]}`;
     return value;
+  }
+
+  bind(...params: Value[]) {
+    if (params.length !== this.bindParams) {
+      throw new TypeError(
+        `Expected ${this.bindParams} parameters to be bound, but got ${params.length}`,
+      );
+    }
+
+    const values = new Array(this.values.length);
+
+    for (let i = 0, j = 0; i < this.values.length; i++) {
+      const value = this.values[i];
+      values[i] = value === BIND_PARAM ? params[j++] : value;
+    }
+
+    return values;
   }
 
   inspect() {
