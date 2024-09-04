@@ -88,7 +88,7 @@ query.values; //=> ["Blake", "Bob", "Joe"]
 
 ## Recipes
 
-This package "just works" with [`pg`](https://www.npmjs.com/package/pg), [`mysql`](https://www.npmjs.com/package/mysql), [`sqlite`](https://www.npmjs.com/package/sqlite) and [`oracledb`](https://www.npmjs.com/package/node-oracledb).
+This package "just works" with [`pg`](https://www.npmjs.com/package/pg), [`mysql`](https://www.npmjs.com/package/mysql), [`sqlite`](https://www.npmjs.com/package/sqlite). Support for Oracle Database is available for both client ([`oracledb`](https://www.npmjs.com/package/node-oracledb)) and server mode ([Multilingual Engine/JavaScript](https://docs.oracle.com/en/database/oracle/oracle-database/23/mlejs/index.html)), the latter since Oracle Database 23ai for Linux x86-64 ([API documentation](https://oracle-samples.github.io/mle-modules/docs/mle-js-oracledb/23ai/classes/api.IConnection.html#execute)).
 
 ### [MSSQL](https://www.npmjs.com/package/mssql)
 

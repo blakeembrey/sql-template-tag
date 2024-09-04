@@ -14,6 +14,7 @@
     "mysql",
     "sqlite",
     "oracledb",
+    "Multilingual Engine/JavaScript"
     "oracle"
   ],
   "homepage": "https://github.com/blakeembrey/sql-template-tag",
