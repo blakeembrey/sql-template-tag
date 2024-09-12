@@ -90,6 +90,17 @@ export class Sql {
     return value;
   }
 
+  get duckdb() {
+    const len = this.strings.length;
+    let i = 1;
+    let value = this.strings[0];
+    while (i < len) {
+      const duckDbType = getJsToDuckDbType(this.values[i - 1]);
+      value += `?::${duckDbType}${this.strings[i++]}`;
+    }
+    return value;
+  }
+
   inspect() {
     return {
       sql: this.sql,
@@ -174,4 +185,30 @@ export default function sql(
   ...values: readonly RawValue[]
 ) {
   return new Sql(strings, values);
+}
+
+function getJsToDuckDbType(value: unknown): string {
+  if (value === null) {
+    return "NULL";
+  }
+
+  switch (typeof value) {
+    case "string":
+      return "VARCHAR";
+    case "number":
+      return Number.isInteger(value) ? "INTEGER" : "DOUBLE";
+    case "boolean":
+      return "BOOLEAN";
+    case "bigint":
+      return "BIGINT";
+    case "object":
+      if (value instanceof Date) {
+        return "TIMESTAMP";
+      } else if (Array.isArray(value)) {
+        return "ARRAY";
+      }
+      return "JSON";
+    default:
+      return "VARCHAR"; // Default to VARCHAR for unknown types
+  }
 }

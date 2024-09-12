@@ -29,6 +29,9 @@ describe("sql template tag", () => {
     expect(query.sql).toEqual("SELECT * FROM books WHERE author = ?");
     expect(query.text).toEqual("SELECT * FROM books WHERE author = $1");
     expect(query.statement).toEqual("SELECT * FROM books WHERE author = :1");
+    expect(query.duckdb).toEqual(
+      "SELECT * FROM books WHERE author = ?::VARCHAR",
+    );
     expect(query.values).toEqual([name]);
   });
 
