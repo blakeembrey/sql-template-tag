@@ -98,24 +98,41 @@ mssql.query(query.strings, ...query.values);
 
 ### Stricter TypeScript
 
-The default value is `unknown` to support [every possible input](https://github.com/blakeembrey/sql-template-tag/pull/26). If you want stricter TypeScript values you can create a new `sql` template tag function.
+The default value is `unknown` to support [every possible input](https://github.com/blakeembrey/sql-template-tag/pull/26). Use `TypedSqlApi` to opt into the parameter types supported by your SQL client:
 
 ```ts
-import { Sql } from "sql-template-tag";
+import sql, { join, type TypedSqlApi } from "sql-template-tag";
 
-type SupportedValue =
-  | string
-  | number
-  | SupportedValue[]
-  | { [key: string]: SupportedValue };
+type SupportedValue = string | number;
 
-function sql(
-  strings: ReadonlyArray<string>,
-  ...values: Array<SupportedValue | Sql>
-) {
-  return new Sql(strings, values);
-}
+const strictSql = sql as TypedSqlApi<SupportedValue>["default"];
+const strictJoin = join as TypedSqlApi<SupportedValue>["join"];
+const query = strictSql`SELECT * FROM users WHERE id IN (${strictJoin([
+  1, 2,
+])})`;
+
+query.values; // SupportedValue[]
 ```
+
+To type all helpers together, use the module namespace:
+
+```ts
+import * as original from "sql-template-tag";
+import type { TypedSqlApi } from "sql-template-tag";
+
+const {
+  default: sql,
+  Sql,
+  join,
+  bulk,
+  raw,
+  empty,
+} = original as TypedSqlApi<string | number>;
+```
+
+`TypedSql<T>` describes the resulting query, including `values` and `inspect().values`. Nested queries must have compatible value types. `raw` and `empty` have no parameter values, so they can be used with any selected type.
+
+These optional type assertions provide compile-time checks using the existing functions and constructor. They do not validate runtime input. The individual-import form also keeps unused helpers out of your imports.
 
 ## Related
 

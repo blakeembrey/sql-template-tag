@@ -175,3 +175,38 @@ export default function sql(
 ) {
   return new Sql(strings, values);
 }
+/**
+ * A SQL query whose parameter values have an application-defined type.
+ */
+export interface TypedSql<T> extends Sql {
+  readonly values: T[];
+  inspect(): Omit<ReturnType<Sql["inspect"]>, "values"> & { values: T[] };
+}
+
+/**
+ * An optional type-only view of the existing SQL exports.
+ */
+export interface TypedSqlApi<T> {
+  readonly default: (
+    strings: readonly string[],
+    ...values: readonly (T | TypedSql<T>)[]
+  ) => TypedSql<T>;
+  readonly Sql: new (
+    strings: readonly string[],
+    values: readonly (T | TypedSql<T>)[],
+  ) => TypedSql<T>;
+  readonly join: (
+    values: readonly (T | TypedSql<T>)[],
+    separator?: string,
+    prefix?: string,
+    suffix?: string,
+  ) => TypedSql<T>;
+  readonly bulk: (
+    data: ReadonlyArray<ReadonlyArray<T | TypedSql<T>>>,
+    separator?: string,
+    prefix?: string,
+    suffix?: string,
+  ) => TypedSql<T>;
+  readonly raw: (value: string) => TypedSql<never>;
+  readonly empty: TypedSql<never>;
+}
